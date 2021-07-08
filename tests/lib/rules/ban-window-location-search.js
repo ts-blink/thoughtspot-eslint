@@ -9,9 +9,7 @@
 //------------------------------------------------------------------------------
 
 var rule = require("../../../lib/rules/ban-window-location-search"),
-
-    RuleTester = require("eslint").RuleTester;
-
+  RuleTester = require("eslint").RuleTester;
 
 //------------------------------------------------------------------------------
 // Tests
@@ -19,19 +17,24 @@ var rule = require("../../../lib/rules/ban-window-location-search"),
 
 var ruleTester = new RuleTester();
 ruleTester.run("ban-window-location-search", rule, {
+  valid: [
+    {
+      code: "var queryHash = window.location.hash;",
+    },
+    {
+      code: "var location = window.location;",
+    },
+  ],
 
-    valid: [
-
-        // give me some code that won't trigger a warning
-    ],
-
-    invalid: [
+  invalid: [
+    {
+      code: "var queryParams = window.location.search;",
+      errors: [
         {
-            code: "const queryParams = window.location.search",
-            errors: [{
-                message: "Fill me in.",
-                type: "Me too"
-            }]
-        }
-    ]
+          message:
+            "usage of window.location.search is banned. Use env-flags package to get Query Params or query string",
+        },
+      ],
+    },
+  ],
 });
