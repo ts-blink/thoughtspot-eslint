@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-thoughtspot-eslint",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "custom plugins for thoughtspot",
   "keywords": [
     "eslint",
