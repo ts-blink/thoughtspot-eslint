@@ -56,7 +56,7 @@ ruleTester.run("restrict-anchor-tags", rule, {
       errors: [
         {
           message:
-            "Use <Link> component instead of <a> tag. Import: import { Link } from '@thoughtspot/radiant-react/widgets/link'. For exceptions, In case your link is static and wouldn't be used by customers for customized Link in UI, use: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars).",
+            "Use <Link> component instead of <a> tag. For exceptions for non react components, In case your link is static and wouldn't be used by main app in UI, use: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars). Please request TSE team review.",
         },
       ],
     },
@@ -66,7 +66,7 @@ ruleTester.run("restrict-anchor-tags", rule, {
       errors: [
         {
           message:
-            "Use <Link> component instead of <a> tag. Import: import { Link } from '@thoughtspot/radiant-react/widgets/link'. For exceptions, In case your link is static and wouldn't be used by customers for customized Link in UI, use: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars).",
+            "Use <Link> component instead of <a> tag. For exceptions for non react components, In case your link is static and wouldn't be used by main app in UI, use: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars). Please request TSE team review.",
         },
       ],
     },
@@ -76,7 +76,7 @@ ruleTester.run("restrict-anchor-tags", rule, {
       errors: [
         {
           message:
-            "Use <Link> component instead of <a> tag. Import: import { Link } from '@thoughtspot/radiant-react/widgets/link'. For exceptions, In case your link is static and wouldn't be used by customers for customized Link in UI, use: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars).",
+            "Use <Link> component instead of <a> tag. For exceptions for non react components, In case your link is static and wouldn't be used by main app in UI, use: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars). Please request TSE team review.",
         },
       ],
     },
