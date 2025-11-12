@@ -9,154 +9,136 @@
 //------------------------------------------------------------------------------
 
 var rule = require("../../../lib/rules/restrict-anchor-tags"),
-  RuleTester = require("eslint").RuleTester;
+    RuleTester = require("eslint").RuleTester;
 
 //------------------------------------------------------------------------------
 // Tests
 //------------------------------------------------------------------------------
 
 var ruleTester = new RuleTester({
-  parserOptions: {
-    ecmaVersion: 2018,
-    sourceType: "module",
-    ecmaFeatures: {
-      jsx: true,
+    parserOptions: {
+        ecmaVersion: 2018,
+        sourceType: "module",
+        ecmaFeatures: {
+            jsx: true,
+        },
     },
-  },
 });
 
 ruleTester.run("restrict-anchor-tags", rule, {
-  valid: [
-    // Using Link component (preferred)
-    {
-      code: "import { Link } from '@thoughtspot/radiant-react/widgets/link';\nconst MyComponent = () => <Link href='/path'>Click here</Link>;",
-      filename: "test.tsx",
-    },
-    
-    // Non-anchor elements
-    {
-      code: "<div>Some content</div>",
-      filename: "test.tsx",
-    },
-    
-    // Creating anchor via DOM API (not JSX)
-    {
-      code: "const element = document.createElement('a');",
-      filename: "test.tsx",
-    },
-    
-    // Test files are allowed to use anchor tags
-    {
-      code: "<a href='/path'>Click here</a>",
-      filename: "test.spec.tsx",
-    },
-    {
-      code: "<a href='/path'>Click here</a>",
-      filename: "component.test.jsx",
-    },
-    
-    // Valid disable comment with proper description and TSE review
-    {
-      code: "// eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-12345] This is a static error page link that cannot use React components [TSE-Reviewed]\n<a href='/error'>Error Page</a>",
-      filename: "test.tsx",
-    },
-    
-    // Valid disable comment with inline style
-    {
-      code: "<a href='/path'>Click here</a> // eslint-disable-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-67890] Legacy third-party integration requires raw anchor tag [TSE-Reviewed]",
-      filename: "test.tsx",
-    },
-    
-    // Valid disable comment with longer description
-    {
-      code: "// eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-11111] This anchor tag is used in a vanilla JS context where React components are not available, specifically for error pages served by Nginx [TSE-Reviewed]\n<a href='/404'>Not Found</a>",
-      filename: "test.tsx",
-    },
-  ],
+    valid: [
+        // Using Link component (preferred)
+        {
+            code: "import { Link } from '@thoughtspot/radiant-react/widgets/link';\nconst MyComponent = () => <Link href='/path'>Click here</Link>;",
+            filename: "test.tsx",
+        },
 
-  invalid: [
-    // Basic anchor tag without disable comment
-    {
-      code: "<a href='/path'>Click here</a>",
-      filename: "test.tsx",
-      errors: [
+        // Non-anchor elements
         {
-          message:
-            "Use <Link> component instead of <a> tag. For exceptions for non react components, In case your link is static and wouldn't be used by main app in UI, use: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars) [TSE-Reviewed]. Please request TSE team review.",
+            code: "<div>Some content</div>",
+            filename: "test.tsx",
         },
-      ],
-    },
-    
-    // Anchor tag in component
-    {
-      code: "const MyComponent = () => <a href='https://example.com' target='_blank'>External Link</a>;",
-      filename: "component.tsx",
-      errors: [
+
+        // Creating anchor via DOM API (not JSX)
         {
-          message:
-            "Use <Link> component instead of <a> tag. For exceptions for non react components, In case your link is static and wouldn't be used by main app in UI, use: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars) [TSE-Reviewed]. Please request TSE team review.",
+            code: "const element = document.createElement('a');",
+            filename: "test.tsx",
         },
-      ],
-    },
-    
-    // Anchor tag with onClick
-    {
-      code: "<div><a className='link' onClick={() => {}}>Click</a></div>",
-      filename: "page.jsx",
-      errors: [
+
+        // Test files are allowed to use anchor tags
         {
-          message:
-            "Use <Link> component instead of <a> tag. For exceptions for non react components, In case your link is static and wouldn't be used by main app in UI, use: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars) [TSE-Reviewed]. Please request TSE team review.",
+            code: "<a href='/path'>Click here</a>",
+            filename: "test.spec.tsx",
         },
-      ],
-    },
-    
-    // Disable comment without description separator (--)
-    {
-      code: "// eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags\n<a href='/path'>Click here</a>",
-      filename: "test.tsx",
-      errors: [
         {
-          message:
-            "Anchor tag disable comment must include a description after '--'. Required format: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars) [TSE-Reviewed]",
+            code: "<a href='/path'>Click here</a>",
+            filename: "component.test.jsx",
         },
-      ],
-    },
-    
-    // Disable comment with description but too short
-    {
-      code: "// eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- Short desc\n<a href='/path'>Click here</a>",
-      filename: "test.tsx",
-      errors: [
+    ],
+
+    invalid: [
+        // Basic anchor tag without disable comment
         {
-          message:
-            "Anchor tag disable comment description is too short (10 chars, minimum 20 required). Required format: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars) [TSE-Reviewed]",
+            code: "<a href='/path'>Click here</a>",
+            filename: "test.tsx",
+            errors: [
+                {
+                    message:
+                        "Use <Link> component instead of <a> tag. For exceptions for non react components, In case your link is static and wouldn't be used by main app in UI, use: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars) [TSE-Reviewed]. Please request TSE team review.",
+                },
+            ],
         },
-      ],
-    },
-    
-    // Disable comment with proper length but missing TSE review
-    {
-      code: "// eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-12345] This is a static error page link that needs anchor tag\n<a href='/path'>Click here</a>",
-      filename: "test.tsx",
-      errors: [
+
+        // Anchor tag in component
         {
-          message:
-            "Anchor tag disable comment must include '[TSE-Reviewed]' to confirm TSE team review. Required format: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars) [TSE-Reviewed]",
+            code: "const MyComponent = () => <a href='https://example.com' target='_blank'>External Link</a>;",
+            filename: "component.tsx",
+            errors: [
+                {
+                    message:
+                        "Use <Link> component instead of <a> tag. For exceptions for non react components, In case your link is static and wouldn't be used by main app in UI, use: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars) [TSE-Reviewed]. Please request TSE team review.",
+                },
+            ],
         },
-      ],
-    },
-    
-    // Disable comment with TSE-Reviewed but description too short
-    {
-      code: "// eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- Short [TSE-Reviewed]\n<a href='/path'>Click here</a>",
-      filename: "test.tsx",
-      errors: [
+
+        // Anchor tag with onClick
         {
-          message:
-            "Anchor tag disable comment description is too short (22 chars, minimum 20 required). Required format: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars) [TSE-Reviewed]",
+            code: "<div><a className='link' onClick={() => {}}>Click</a></div>",
+            filename: "page.jsx",
+            errors: [
+                {
+                    message:
+                        "Use <Link> component instead of <a> tag. For exceptions for non react components, In case your link is static and wouldn't be used by main app in UI, use: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars) [TSE-Reviewed]. Please request TSE team review.",
+                },
+            ],
         },
-      ],
-    },
-  ],
+
+        // Disable comment without description separator (--)
+        {
+            code: "// eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags\n<a href='/path'>Click here</a>",
+            filename: "test.tsx",
+            noInlineConfig: true,
+            errors: [
+                {
+                    message: "'//eslint-disable-next-line' has no effect because you have 'noInlineConfig' setting in your config.",
+                },
+                {
+                    message:
+                        "Anchor tag disable comment must include a description after '--'. Required format: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars) [TSE-Reviewed]",
+                },
+            ],
+        },
+
+        // Disable comment with description but too short
+        {
+            code: "// eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- Short desc\n<a href='/path'>Click here</a>",
+            filename: "test.tsx",
+            noInlineConfig: true,
+            errors: [
+                {
+                    message: "'//eslint-disable-next-line' has no effect because you have 'noInlineConfig' setting in your config.",
+                },
+                {
+                    message:
+                        "Anchor tag disable comment description is too short (10 chars, minimum 20 required). Required format: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars) [TSE-Reviewed]",
+                },
+            ],
+        },
+
+        // Disable comment with proper length but missing TSE review
+        {
+            code: "// eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-12345] This is a static error page link that needs anchor tag\n<a href='/path'>Click here</a>",
+            filename: "test.tsx",
+            noInlineConfig: true,
+            errors: [
+                {
+                    message: "'//eslint-disable-next-line' has no effect because you have 'noInlineConfig' setting in your config.",
+                },
+                {
+                    message:
+                        "Anchor tag disable comment must include '[TSE-Reviewed]' to confirm TSE team review. Required format: // eslint-disable-next-line thoughtspot-eslint/restrict-anchor-tags -- [SCAL-ID] Detailed reason (min 20 chars) [TSE-Reviewed]",
+                },
+            ],
+        },
+    ],
 });
