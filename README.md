@@ -39,6 +39,8 @@ Then configure the rules you want to use under the rules section.
 ## Supported Rules
 
 - ban-window-location-search: bans the use of window.location.search in codebase
+- require-effect-cleanup: requires an effect that acquires a listener, timer,
+  animation frame, subscription or observer to return a cleanup that releases it
 
 ## Running tests
 
